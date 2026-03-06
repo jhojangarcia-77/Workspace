@@ -1,0 +1,3 @@
+La clase de mediación técnica de software es un espacio educativo donde los estudiantes aprenden cómo el software permite la interacción entre las personas y las computadoras. En esta clase se explican conceptos básicos sobre programas, aplicaciones y sistemas que facilitan el uso de la tecnología en la vida diaria.
+
+Durante la clase, el profesor explica los temas de manera clara y utiliza ejemplos prácticos para que los estudiantes comprendan mejor cómo funciona el software. Además de la parte teórica, se realizan actividades prácticas en el computador, donde los estudiantes pueden explorar diferentes programas, aprender a utilizarlos y resolver pequeños ejercicios relacionados con la tecnología.# Workspace
