@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './App.css'
 
 const languages = ['JavaScript', 'Python', 'Java', 'C#']
@@ -17,6 +17,8 @@ function App() {
   const [country, setCountry] = useState('')
   const [comments, setComments] = useState('')
   const [photo, setPhoto] = useState(null)
+  const [photoPreview, setPhotoPreview] = useState('')
+  const previewUrlRef = useRef('')
   const [favoriteColor, setFavoriteColor] = useState('#ff6b35')
   const [submittedData, setSubmittedData] = useState(null)
 
@@ -25,10 +27,10 @@ function App() {
   const canSubmit = acceptedTerms && emailIsValid && ageIsValid
 
   useEffect(() => {
-    if (!photo) return undefined
-    const objectUrl = URL.createObjectURL(photo)
-    return () => URL.revokeObjectURL(objectUrl)
-  }, [photo])
+    return () => {
+      if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current)
+    }
+  }, [])
 
   const handleLanguageChange = (language) => {
     setKnownLanguages((current) =>
@@ -39,7 +41,11 @@ function App() {
   }
 
   const handlePhotoChange = (event) => {
-    setPhoto(event.target.files[0] ?? null)
+    const selectedPhoto = event.target.files[0] ?? null
+    if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current)
+    previewUrlRef.current = selectedPhoto ? URL.createObjectURL(selectedPhoto) : ''
+    setPhoto(selectedPhoto)
+    setPhotoPreview(previewUrlRef.current)
   }
 
   const handleSubmit = (event) => {
@@ -49,6 +55,7 @@ function App() {
     setSubmittedData({
       name,
       email,
+      password: 'Registrada de forma segura',
       age,
       birthDate,
       experience,
@@ -95,7 +102,7 @@ function App() {
         <section className="form-section">
           <div className="section-heading"><span className="section-number">03</span><div><h2>Detalles finales</h2><p>Un último toque para conocerte mejor.</p></div></div>
           <div className="field-grid two-columns">
-            <label className="file-field">Foto de perfil<input type="file" accept="image/*" onChange={handlePhotoChange} />{photo && <span className="file-name">{photo.name}</span>}</label>
+            <label className="file-field">Foto de perfil<input type="file" accept="image/*" onChange={handlePhotoChange} />{photo && <><span className="file-name">{photo.name}</span>{photoPreview && <img className="photo-preview" src={photoPreview} alt="Vista previa de la foto de perfil" />}</>}</label>
             <label className="color-field">Color favorito<div className="color-input"><input type="color" value={favoriteColor} onChange={(event) => setFavoriteColor(event.target.value)} /><span>{favoriteColor.toUpperCase()}</span></div></label>
             <label className="full-width">Comentarios<textarea value={comments} onChange={(event) => setComments(event.target.value)} placeholder="¿Qué esperas aprender?" rows="4" /></label>
           </div>
