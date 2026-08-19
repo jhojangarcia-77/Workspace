@@ -5,7 +5,7 @@ const tareasIniciales = [
   { id: 1, texto: 'Aprender React', categoria: 'estudio', completada: false },
   { id: 2, texto: 'Hacer ejercicio', categoria: 'salud', completada: true },
   { id: 3, texto: 'Leer un libro', categoria: 'ocio', completada: false },
-  // Bug 1 resuelto: se agregó la categoría que faltaba para evitar undefined.toUpperCase().
+  // Error 1 resuelto: se agrego una categoria valida para evitar undefined.toUpperCase().
   { id: 4, texto: 'Practicar debugging', categoria: 'estudio', completada: false },
 ]
 
@@ -13,14 +13,14 @@ function App() {
   const [tareas, setTareas] = useState(tareasIniciales)
   const [filtro, setFiltro] = useState('todas')
 
-  // Bug 2 resuelto: el arreglo vacío evita que el efecto se ejecute en cada render.
+  // Error 2 resuelto: el arreglo de dependencias vacio ejecuta el efecto solo al montar.
   useEffect(() => {
     console.log('App montada')
   }, [])
 
   const tareasFiltradas = tareas.filter((tarea) => {
     if (filtro === 'todas') return true
-    // Bug 3 resuelto: se comparan valores booleanos con true y false, no con strings.
+    // Error 3 resuelto: se comparan valores booleanos, no strings, para filtrar tareas.
     if (filtro === 'completadas') return tarea.completada === true
     if (filtro === 'pendientes') return tarea.completada === false
     return true
@@ -28,16 +28,18 @@ function App() {
 
   function agregarTarea(texto) {
     if (!texto.trim()) return
-    // Bug 4 resuelto: se crea un arreglo nuevo para que React detecte el cambio.
+    // Error 4 resuelto: se crea un arreglo nuevo para que React detecte la tarea agregada.
     const nuevaTarea = { id: Date.now(), texto, categoria: 'general', completada: false }
     setTareas((tareasActuales) => [...tareasActuales, nuevaTarea])
   }
 
   function completarTarea(id) {
-    const nuevasTareas = tareas.map((tarea) =>
-      tarea.id === id ? { ...tarea, completada: true } : tarea,
+    // Error adicional resuelto: el estado funcional conserva actualizaciones rapidas consecutivas.
+    setTareas((tareasActuales) =>
+      tareasActuales.map((tarea) =>
+        tarea.id === id ? { ...tarea, completada: true } : tarea,
+      ),
     )
-    setTareas(nuevasTareas)
   }
 
   return (
@@ -84,7 +86,7 @@ function PerfilUsuario() {
   const [usuario, setUsuario] = useState(null)
   const [error, setError] = useState('')
 
-  // Bug 5 resuelto: se controla el error asíncrono y se muestra un mensaje en pantalla.
+  // Error 5 resuelto: se controla el error de carga y se guarda para poder mostrarlo.
   useEffect(() => {
     const temporizador = setTimeout(() => {
       try {
